@@ -21,10 +21,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Typing Effect - honest titles
     const texts = [
-        "Software Developer.",
-        "Python & JavaScript Builder.",
+        "Student & Developer.",
+        "Python & JavaScript Learner.",
         "Automation Enthusiast.",
-        "Computer Science Student."
+        "Building side projects."
     ];
     let count = 0;
     let index = 0;
