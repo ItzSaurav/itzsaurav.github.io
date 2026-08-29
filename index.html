@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saurav G Mishra | Student Developer</title>
+    <title>Saurav Mishra | Developer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <meta name="description" content="Portfolio of Saurav G Mishra, Student and Aspiring Developer.">
+    <meta name="description" content="Portfolio of Saurav Mishra - Information Science student, Python developer, and systems enthusiast.">
 </head>
 <body>
 
@@ -16,22 +16,26 @@
         <div class="logo">Saurav.</div>
         <ul class="nav-links">
             <li><a href="#home">Home</a></li>
-            <li><a href="#about">Experience</a></li>
+            <li><a href="#about">About & Skills</a></li>
             <li><a href="#projects">Projects</a></li>
-            <li><a href="#news">News</a></li>
+            <li><a href="#news">Tech Feed</a></li>
             <li><a href="#contact">Contact</a></li>
             <li><a href="Saurav_Mishra_Resume.pdf" target="_blank">Resume</a></li>
         </ul>
         <div class="theme-switch-wrapper">
-            <label class="theme-switch" for="checkbox">
+            <label class="theme-switch" for="checkbox" aria-label="Toggle dark and light theme">
                 <input type="checkbox" id="checkbox" />
                 <div class="slider round">
-                    <span class="icon-sun">☀️</span>
-                    <span class="icon-moon">🌙</span>
+                    <span class="icon-sun">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    </span>
+                    <span class="icon-moon">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    </span>
                 </div>
             </label>
         </div>
-        <div class="mobile-menu-btn" id="mobile-menu-btn">
+        <div class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle navigation menu">
             <span class="bar"></span>
             <span class="bar"></span>
             <span class="bar"></span>
@@ -45,10 +49,10 @@
                 <div class="typing-container">
                     <span id="typed-text"></span><span class="cursor">&nbsp;</span>
                 </div>
-                <p class="description mx-auto">An Information Science student and aspiring developer based in Bangalore, India. I'm currently learning backend development and exploring AI, building projects to improve my skills along the way.</p>
+                <p class="description mx-auto">Information Science undergraduate in Bangalore, India. Focused on Python, backend engineering, automated data pipelines, and foundational computer systems.</p>
                 <div class="hero-links center-flex">
-                    <a href="https://github.com/ItzSaurav" target="_blank" class="btn btn-primary">GitHub</a>
-                    <a href="https://linkedin.com/in/saurav-mishra-812259364" target="_blank" class="btn btn-secondary">LinkedIn</a>
+                    <a href="https://github.com/ItzSaurav" target="_blank" rel="noopener noreferrer" class="btn btn-primary">GitHub</a>
+                    <a href="https://linkedin.com/in/saurav-mishra-812259364" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">LinkedIn</a>
                 </div>
             </div>
         </div>
@@ -58,17 +62,50 @@
         <div class="reveal">
             <h2 class="section-title">About & Skills</h2>
             <div class="card minimal-card p-large">
-                <p class="text-large">I am an Information Science and Engineering student on a journey to learn backend development and AI-assisted programming. I love building practical projects to solve everyday problems and discover new technologies. I'm always experimenting with new tools and looking for opportunities to grow as a developer!</p>
-                <div class="skills mt-medium">
-                    <span class="pill">Python</span>
-                    <span class="pill">JavaScript</span>
-                    <span class="pill">Node.js</span>
-                    <span class="pill">Next.js</span>
-                    <span class="pill">SQL</span>
-                    <span class="pill">Docker</span>
-                    <span class="pill">Linux</span>
-                    <span class="pill">n8n / Zapier</span>
-                    <span class="pill">C/C++</span>
+                <p class="text-large">I am an Information Science and Engineering student with hands-on experience building backend scripts, automation pipelines, and web applications. I focus on writing clear, maintainable code, understanding how systems work under the hood, and solving practical engineering problems.</p>
+                
+                <div class="skill-category mt-medium">
+                    <h3 class="skill-group-title">Languages</h3>
+                    <div class="skills">
+                        <span class="pill">Python</span>
+                        <span class="pill">JavaScript</span>
+                        <span class="pill">TypeScript</span>
+                        <span class="pill">C / C++</span>
+                        <span class="pill">SQL</span>
+                    </div>
+                </div>
+
+                <div class="skill-category mt-medium">
+                    <h3 class="skill-group-title">Backend & Web</h3>
+                    <div class="skills">
+                        <span class="pill">Flask</span>
+                        <span class="pill">Node.js</span>
+                        <span class="pill">Express</span>
+                        <span class="pill">REST APIs</span>
+                        <span class="pill">Firebase</span>
+                        <span class="pill">HTML5 / CSS3</span>
+                    </div>
+                </div>
+
+                <div class="skill-category mt-medium">
+                    <h3 class="skill-group-title">Automation & Tools</h3>
+                    <div class="skills">
+                        <span class="pill">Git</span>
+                        <span class="pill">GitHub Actions</span>
+                        <span class="pill">FFmpeg</span>
+                        <span class="pill">Bash</span>
+                        <span class="pill">Zapier</span>
+                        <span class="pill">n8n</span>
+                    </div>
+                </div>
+
+                <div class="skill-category mt-medium">
+                    <h3 class="skill-group-title">Active Areas of Study</h3>
+                    <div class="skills">
+                        <span class="pill">Linux Systems & Internals</span>
+                        <span class="pill">Operating Systems</span>
+                        <span class="pill">Docker</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -80,17 +117,17 @@
                     <h3>AI Research Intern</h3>
                     <h4 class="text-accent">Sunny Side Up | May 2025 – Jun 2025</h4>
                     <ul>
-                        <li>Built and maintained a categorized directory of 50+ AI tools spanning image generation, video editing, and productivity.</li>
-                        <li>Prototyped Zapier automation workflows (e.g., birthday emails, employee onboarding).</li>
-                        <li>Built personal coding projects with Cursor AI, applying AI-assisted development workflows.</li>
-                        <li>Conducted trademark conflict research and prototyped Photoshop (ExtendScript) scripting.</li>
+                        <li>Researched, tested, and categorized 50+ AI tools and APIs across media processing, productivity, and generative workflows.</li>
+                        <li>Designed and prototyped automated workflows in Zapier for internal communication and onboarding tasks.</li>
+                        <li>Prototyped graphic processing scripts using Photoshop ExtendScript (JavaScript) and evaluated AI-assisted coding tooling.</li>
+                        <li>Documented tool capabilities, limits, and integration paths for team adoption.</li>
                     </ul>
                 </div>
 
                 <div class="timeline-item mt-medium">
                     <h3>B.E. in Information Science and Engineering</h3>
                     <h4 class="text-accent">GCEM - VTU, Bangalore | Expected: 2029</h4>
-                    <p class="text-muted">SGPA: 7.33 (Sem 1)</p>
+                    <p class="text-muted">Current Academic Record: SGPA 7.33 (Semester 1)</p>
                 </div>
             </div>
         </div>
@@ -111,32 +148,81 @@
 
                 <div class="card project-card">
                     <div class="project-info">
-                        <h3>StudyForge</h3>
-                        <p class="text-muted">A gamified productivity app with XP, levels, and streak tracking, backed by a serverless Firebase SPA architecture.</p>
-                        <div style="display: flex; gap: 15px;">
-                            <a href="https://github.com/ItzSaurav/studyforge" target="_blank" class="link-arrow">View on GitHub &rarr;</a>
-                            <a href="https://studyforge-pearl.vercel.app/" target="_blank" class="link-arrow">Live Demo &rarr;</a>
+                        <h3>Free Remotion Pipeline</h3>
+                        <p class="text-muted">An automated, zero-cost video compositing pipeline built with Remotion and TypeScript. Integrates Microsoft Edge neural TTS, local ONNX neural background removal, and automated rendering via GitHub Actions.</p>
+                        <div class="project-tags">
+                            <span class="mini-tag">TypeScript</span>
+                            <span class="mini-tag">Remotion</span>
+                            <span class="mini-tag">ONNX</span>
+                            <span class="mini-tag">CI/CD</span>
+                        </div>
+                        <div class="project-links mt-small">
+                            <a href="https://github.com/ItzSaurav/free-remotion-pipeline" target="_blank" rel="noopener noreferrer" class="link-arrow">View on GitHub &rarr;</a>
                         </div>
                     </div>
                 </div>
 
-
                 <div class="card project-card">
                     <div class="project-info">
-                        <h3>Rainvision</h3>
-                        <p class="text-muted">A modern web application built with Next.js and TypeScript. Features a responsive frontend layout and robust component architecture.</p>
-                        <a href="https://github.com/ItzSaurav/rainvision" target="_blank" class="link-arrow">View on GitHub &rarr;</a>
+                        <h3>AI Tools Newsletter Pipeline</h3>
+                        <p class="text-muted">A scheduled Python data pipeline that aggregates developer tool feeds from multiple sources, applies weighted ranking heuristics, runs LLM-assisted curation, and drafts publication-ready HTML newsletters via GitHub Actions.</p>
+                        <div class="project-tags">
+                            <span class="mini-tag">Python</span>
+                            <span class="mini-tag">GitHub Actions</span>
+                            <span class="mini-tag">Data Ingestion</span>
+                            <span class="mini-tag">Unit Testing</span>
+                        </div>
+                        <div class="project-links mt-small">
+                            <a href="https://github.com/ItzSaurav/ai-tools-newsletter" target="_blank" rel="noopener noreferrer" class="link-arrow">View on GitHub &rarr;</a>
+                        </div>
                     </div>
                 </div>
 
-                
                 <div class="card project-card">
                     <div class="project-info">
-                        <h3>FoodShare</h3>
-                        <p class="text-muted">A community food-sharing platform built as a client-side PWA with a serverless Firebase integration.</p>
-                        <div style="display: flex; gap: 15px;">
-                            <a href="https://github.com/ItzSaurav/FoodShare" target="_blank" class="link-arrow">View on GitHub &rarr;</a>
-                            <a href="https://idp-blush.vercel.app/" target="_blank" class="link-arrow">Live Demo &rarr;</a>
+                        <h3>YouTube Shorts Automation</h3>
+                        <p class="text-muted">A modular content automation workflow that coordinates topic ingestion, script generation, text-to-speech audio synthesis, and automated FFmpeg video assembly with YouTube Data API v3 publishing.</p>
+                        <div class="project-tags">
+                            <span class="mini-tag">Python</span>
+                            <span class="mini-tag">LangGraph</span>
+                            <span class="mini-tag">FFmpeg</span>
+                            <span class="mini-tag">YouTube API</span>
+                        </div>
+                        <div class="project-links mt-small">
+                            <a href="https://github.com/ItzSaurav/youtube-shorts-automation" target="_blank" rel="noopener noreferrer" class="link-arrow">View on GitHub &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card project-card">
+                    <div class="project-info">
+                        <h3>StudyForge</h3>
+                        <p class="text-muted">A gamified task and study management web application featuring XP progression, levels, and streak tracking. Built with vanilla JavaScript on a client-side Firebase Firestore and Authentication architecture.</p>
+                        <div class="project-tags">
+                            <span class="mini-tag">JavaScript</span>
+                            <span class="mini-tag">Firebase</span>
+                            <span class="mini-tag">PWA</span>
+                            <span class="mini-tag">Vercel</span>
+                        </div>
+                        <div class="project-links mt-small">
+                            <a href="https://github.com/ItzSaurav/studyforge" target="_blank" rel="noopener noreferrer" class="link-arrow">GitHub &rarr;</a>
+                            <a href="https://studyforge-pearl.vercel.app/" target="_blank" rel="noopener noreferrer" class="link-arrow">Live Demo &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card project-card">
+                    <div class="project-info">
+                        <h3>VI Voice Assistant</h3>
+                        <p class="text-muted">A lightweight Python desktop voice assistant prototype integrating speech recognition, Groq LLM API inference for low-latency voice interaction, basic system automation tools, and local flat-file memory.</p>
+                        <div class="project-tags">
+                            <span class="mini-tag">Python</span>
+                            <span class="mini-tag">SpeechRecognition</span>
+                            <span class="mini-tag">Groq API</span>
+                            <span class="mini-tag">Automation</span>
+                        </div>
+                        <div class="project-links mt-small">
+                            <a href="https://github.com/ItzSaurav/VI" target="_blank" rel="noopener noreferrer" class="link-arrow">View on GitHub &rarr;</a>
                         </div>
                     </div>
                 </div>
@@ -144,33 +230,48 @@
                 <div class="card project-card">
                     <div class="project-info">
                         <h3>CB-watch (Gesture Cube Timer)</h3>
-                        <p class="text-muted">A touchless Rubik's Cube timer using OpenCV and MediaPipe. Start and stop the timer with hand gestures or by presenting a solved cube face to the webcam.</p>
-                        <a href="https://github.com/ItzSaurav/CB-watch" target="_blank" class="link-arrow">View on GitHub &rarr;</a>
+                        <p class="text-muted">A touchless Rubik's Cube timer utility built with OpenCV and MediaPipe. Uses real-time hand landmark tracking to detect open-palm start/stop gestures and reset actions without touching the keyboard.</p>
+                        <div class="project-tags">
+                            <span class="mini-tag">Python</span>
+                            <span class="mini-tag">OpenCV</span>
+                            <span class="mini-tag">MediaPipe</span>
+                            <span class="mini-tag">Computer Vision</span>
+                        </div>
+                        <div class="project-links mt-small">
+                            <a href="https://github.com/ItzSaurav/CB-watch" target="_blank" rel="noopener noreferrer" class="link-arrow">View on GitHub &rarr;</a>
+                        </div>
                     </div>
                 </div>
 
                 <div class="card project-card">
                     <div class="project-info">
-                        <h3>VI – Personal Voice Assistant</h3>
-                        <p class="text-muted">Developing a Python-based voice assistant from scratch, featuring speech recognition, conversational AI, and automation features for habit tracking and study support.</p>
-                        <a href="https://github.com/ItzSaurav/VI" target="_blank" class="link-arrow">View on GitHub &rarr;</a>
+                        <h3>Assignmate (Academic Project)</h3>
+                        <p class="text-muted">A peer-to-peer student tutoring platform prototype built with Flask and SQLite. Implements role-based authentication, gig task management, and an internal database-simulated escrow ledger. Built as a college course team project.</p>
+                        <div class="project-tags">
+                            <span class="mini-tag">Python</span>
+                            <span class="mini-tag">Flask</span>
+                            <span class="mini-tag">SQLite</span>
+                            <span class="mini-tag">Academic Team</span>
+                        </div>
+                        <div class="project-links mt-small">
+                            <a href="https://github.com/ItzSaurav/Assignmate-" target="_blank" rel="noopener noreferrer" class="link-arrow">View on GitHub &rarr;</a>
+                        </div>
                     </div>
                 </div>
 
-
                 <div class="card project-card">
                     <div class="project-info">
-                        <h3>Assignmate</h3>
-                        <p class="text-muted">A peer-to-peer student tutoring marketplace featuring a secure escrow wallet payment system, role-based auth, and task bounties. Built with Python, Flask, and SQLite.</p>
-                        <a href="https://github.com/ItzSaurav/Assignmate-" target="_blank" class="link-arrow">View on GitHub &rarr;</a>
-                    </div>
-                </div>
-
-                <div class="card project-card">
-                    <div class="project-info">
-                        <h3>Pygame RPG Engine</h3>
-                        <p class="text-muted">A 2D action/RPG engine featuring procedural world generation with Perlin noise, persistent save states, and native gamepad support. Built with Python and Pygame.</p>
-                        <a href="https://github.com/ItzSaurav/pygame-rpg-engine" target="_blank" class="link-arrow">View on GitHub &rarr;</a>
+                        <h3>Pygame 2D Engine</h3>
+                        <p class="text-muted">A top-down 2D action engine developed in Python with Pygame. Features Perlin noise terrain generation, smooth camera tracking, player/enemy state handling, and persistent game save management.</p>
+                        <div class="project-tags">
+                            <span class="mini-tag">Python</span>
+                            <span class="mini-tag">Pygame</span>
+                            <span class="mini-tag">Procedural Gen</span>
+                            <span class="mini-tag">Game Dev</span>
+                        </div>
+                        <div class="project-links mt-small">
+                            <a href="https://github.com/ItzSaurav/pygame-rpg-engine" target="_blank" rel="noopener noreferrer" class="link-arrow">View on GitHub &rarr;</a>
+                        </div>
                     </div>
                 </div>
 
@@ -181,11 +282,11 @@
     <section id="news" class="news section">
         <div class="reveal">
             <h2 class="section-title">Live Tech Feed</h2>
-            <p class="description mb-medium">Real-time top stories from Hacker News via public API.</p>
+            <p class="description mb-medium">Top stories from Hacker News via public API.</p>
             <div class="card p-medium" id="news-container">
                 <div class="loader" id="news-loader">Fetching latest news...</div>
                 <ul id="news-list" class="news-list">
-                    <!-- News items will be dynamically injected here -->
+                    <!-- Injected dynamically -->
                 </ul>
             </div>
         </div>
@@ -194,7 +295,7 @@
     <section id="contact" class="contact section">
         <div class="reveal">
             <h2 class="section-title text-center">Get in Touch</h2>
-            <p class="description text-center mx-auto mb-large">Always open to discussing automation, backend architecture, or AI-assisted development.</p>
+            <p class="description text-center mx-auto mb-large">Always open to technical discussions, collaboration on backend pipelines, or open-source engineering.</p>
             
             <div class="contact-grid">
                 <div class="contact-card card">
@@ -206,7 +307,7 @@
     </section>
 
     <footer class="minimal-footer">
-        <p>&copy; 2026 Saurav G Mishra. Always learning, always building.</p>
+        <p>&copy; 2026 Saurav Mishra. Engineered with clarity and precision.</p>
     </footer>
 
     <script src="script.js"></script>

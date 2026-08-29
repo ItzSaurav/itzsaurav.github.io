@@ -19,8 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }    
     });
 
-    // Typing Effect
-    const texts = ["Backend Developer.", "Automation Specialist.", "AI Engineer.", "Problem Solver."];
+    // Typing Effect - honest titles
+    const texts = [
+        "Software Developer.",
+        "Python & Backend Builder.",
+        "Automation Engineer.",
+        "Systems & Linux Learner."
+    ];
     let count = 0;
     let index = 0;
     let currentText = "";
@@ -40,33 +45,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
         typedTextElement.textContent = letter;
 
-        let typeSpeed = 100;
+        let typeSpeed = 80;
         if (isDeleting) typeSpeed /= 2;
         if (!isDeleting && letter.length === currentText.length) {
-            typeSpeed = 2000; // Pause before delete
+            typeSpeed = 2200; // Pause before delete
             isDeleting = true;
         } else if (isDeleting && letter.length === 0) {
             isDeleting = false;
             count++;
-            typeSpeed = 500;
+            typeSpeed = 400;
         }
         setTimeout(type, typeSpeed);
     }
     
-    if(typedTextElement) {
+    if (typedTextElement) {
         type();
     }
 
     // Smooth scrolling for navigation links
+    const navLinks = document.querySelector('.nav-links');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const targetId = this.getAttribute('href');
             const targetElement = document.querySelector(targetId);
-            if(targetElement) {
+            if (targetElement) {
                 targetElement.scrollIntoView({ behavior: 'smooth' });
                 // Close mobile menu on link click
-                if (navLinks.classList.contains('active')) {
+                if (navLinks && navLinks.classList.contains('active')) {
                     navLinks.classList.remove('active');
                     if (mobileMenuBtn) mobileMenuBtn.classList.remove('open');
                 }
@@ -75,8 +83,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Mobile Menu Toggle
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const navLinks = document.querySelector('.nav-links');
     if (mobileMenuBtn && navLinks) {
         mobileMenuBtn.addEventListener('click', () => {
             navLinks.classList.toggle('active');
@@ -112,25 +118,25 @@ document.addEventListener('DOMContentLoaded', () => {
             );
             
             const stories = await Promise.all(storyPromises);
-            loader.style.display = 'none';
+            if (loader) loader.style.display = 'none';
             
             stories.forEach((story, index) => {
-                if(!story) return;
+                if (!story) return;
                 const li = document.createElement('li');
                 li.className = 'news-item';
                 li.style.animationDelay = `${index * 0.1}s`; 
                 const link = story.url ? story.url : `https://news.ycombinator.com/item?id=${story.id}`;
                 li.innerHTML = `
-                    <a href="${link}" target="_blank" class="news-title">${story.title}</a>
+                    <a href="${link}" target="_blank" rel="noopener noreferrer" class="news-title">${story.title}</a>
                     <div class="news-meta">
                         ${story.score} points by ${story.by} | ${new Date(story.time * 1000).toLocaleDateString()}
                     </div>
                 `;
-                newsList.appendChild(li);
+                if (newsList) newsList.appendChild(li);
             });
         } catch (error) {
             console.error('Error fetching tech news:', error);
-            loader.innerText = 'Failed to load news. Please try again later.';
+            if (loader) loader.innerText = 'Failed to load news feed.';
         }
     }
     

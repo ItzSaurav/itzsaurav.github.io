@@ -1,44 +1,32 @@
-# Personal Portfolio Website
+# Personal Portfolio
 
-A modern, responsive personal portfolio website showcasing my projects, skills, and experience. 
+Source code for the personal developer portfolio website of Saurav Mishra, hosted on GitHub Pages.
 
-## 🚀 Overview
+## Overview
 
-This repository contains the source code for my personal GitHub Pages website. It serves as a central hub for my developer portfolio, highlighting my background, technical skills, and featured projects.
+A fast, lightweight, and responsive static website showcasing developer background, verified technical projects, and skills.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-- **Frontend**: HTML5, CSS3, Vanilla JavaScript
-- **Backend/Scripts**: Python (for AI news scraping and contact saving automation)
-- **Hosting**: GitHub Pages
+- Frontend: Semantic HTML5, CSS3 Custom Properties, Vanilla JavaScript (ES6+)
+- News Feed: Hacker News Firebase REST API
+- Hosting: GitHub Pages
 
-## ✨ Features
-
-- **Responsive Design**: Fully responsive layout that looks great on mobile, tablet, and desktop devices.
-- **Dynamic Content**: Interactive elements powered by JavaScript.
-- **Python Integrations**: Includes `ai_news_scraper.py` and `save_contact.py` for automated content generation and lead management.
-- **SEO Optimized**: Includes `sitemap.xml` and `robots.txt` for search engine visibility.
-
-## 🚦 Setup Instructions
-
-To run this project locally:
+## Local Development
 
 1. Clone the repository:
    ```bash
    git clone https://github.com/ItzSaurav/itzsaurav.github.io.git
-   ```
-2. Navigate to the project directory:
-   ```bash
    cd itzsaurav.github.io
    ```
-3. Open `index.html` in your web browser. No build steps required!
-4. To run the Python scripts, ensure you have Python 3 installed and install the dependencies:
+
+2. Open `index.html` in any modern web browser or serve locally:
    ```bash
-   pip install -r requirements.txt
+   python -m http.server 8000
    ```
 
-## 📸 Screenshots
-*(Add screenshots of your portfolio here)*
+3. Navigate to `http://localhost:8000`.
 
----
-*Built with ❤️ by [Saurav](https://github.com/ItzSaurav)*
+## License
+
+MIT License. See `LICENSE.txt` for details.

@@ -237,3 +237,42 @@ input:checked + .slider:before { transform: translateX(22px); }
     .mobile-menu-btn { display: flex; }
     .section { padding: 100px 5%; }
 }
+
+
+.skill-category {
+    margin-top: 1.5rem;
+}
+.skill-group-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+}
+.mini-tag {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+}
+.project-links {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+.mt-small {
+    margin-top: auto;
+}
+.icon-sun svg, .icon-moon svg {
+    display: block;
+}
