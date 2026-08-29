@@ -22,9 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Typing Effect - honest titles
     const texts = [
         "Software Developer.",
-        "Python & Backend Builder.",
-        "Automation Engineer.",
-        "Systems & Linux Learner."
+        "Python & JavaScript Builder.",
+        "Automation Enthusiast.",
+        "Computer Science Student."
     ];
     let count = 0;
     let index = 0;
