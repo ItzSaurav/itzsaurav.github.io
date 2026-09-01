@@ -228,22 +228,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 statusBadge.className = 'status-indicator connected';
                 statusText.innerText = 'Firebase Firestore Connected';
             } catch (err) {
-                console.warn('[Analytics] Firebase fetch error, falling back to local/demo:', err);
-                loadFromLocalOrDemo();
+                console.warn('[Analytics] Firebase fetch error, falling back to local storage:', err);
+                loadFromLocalStorage();
             }
         } else {
-            loadFromLocalOrDemo();
+            loadFromLocalStorage();
         }
 
         applyFilters();
     }
 
-    function loadFromLocalOrDemo() {
+    function loadFromLocalStorage() {
         const statusBadge = document.getElementById('status-badge');
         const statusText = document.getElementById('status-text');
         
         statusBadge.className = 'status-indicator demo';
-        statusText.innerText = 'Local / Demo Mode';
+        statusText.innerText = 'Local Storage Mode';
         isConnectedToFirebase = false;
 
         const stored = localStorage.getItem('local_portfolio_visits');
@@ -253,87 +253,9 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (e) {
                 rawVisits = [];
             }
+        } else {
+            rawVisits = [];
         }
-
-        if (!rawVisits || rawVisits.length === 0) {
-            rawVisits = generateSampleVisits();
-            localStorage.setItem('local_portfolio_visits', JSON.stringify(rawVisits));
-        }
-    }
-
-    // Generate Realistic Historical Sample Data for Demo/Preview
-    function generateSampleVisits() {
-        const sampleList = [];
-        const referrers = [
-            { name: 'LinkedIn', domain: 'linkedin.com', weight: 45 },
-            { name: 'GitHub', domain: 'github.com', weight: 30 },
-            { name: 'Direct', domain: 'Direct', weight: 15 },
-            { name: 'Google', domain: 'google.com', weight: 8 },
-            { name: 'X / Twitter', domain: 'x.com', weight: 2 }
-        ];
-        const devices = [
-            { type: 'Desktop', os: 'Windows', browser: 'Chrome', screen: '1920x1080', weight: 60 },
-            { type: 'Desktop', os: 'macOS', browser: 'Safari', screen: '1440x900', weight: 15 },
-            { type: 'Mobile', os: 'Android', browser: 'Chrome', screen: '390x844', weight: 18 },
-            { type: 'Mobile', os: 'iOS', browser: 'Safari', screen: '375x667', weight: 7 }
-        ];
-        const locations = [
-            { country: 'India', countryCode: 'IN', city: 'Bangalore' },
-            { country: 'India', countryCode: 'IN', city: 'Mumbai' },
-            { country: 'United States', countryCode: 'US', city: 'San Francisco' },
-            { country: 'Germany', countryCode: 'DE', city: 'Berlin' },
-            { country: 'United Kingdom', countryCode: 'GB', city: 'London' }
-        ];
-
-        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        const now = new Date();
-
-        for (let d = 50; d >= 0; d--) {
-            const date = new Date(now);
-            date.setDate(now.getDate() - d);
-            const isoWeek = getISOWeekInfo(date);
-            const dayOfWeek = days[date.getDay()];
-
-            const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-            const visitCount = isWeekend ? Math.floor(Math.random() * 4) + 1 : Math.floor(Math.random() * 7) + 2;
-
-            for (let v = 0; v < visitCount; v++) {
-                const hour = Math.floor(Math.random() * 24);
-                const minute = Math.floor(Math.random() * 60);
-                date.setHours(hour, minute, 0);
-
-                const ref = referrers[Math.floor(Math.random() * referrers.length)];
-                const dev = devices[Math.floor(Math.random() * devices.length)];
-                const loc = locations[Math.floor(Math.random() * locations.length)];
-                const isNew = Math.random() > 0.35;
-                const visitorId = 'v_' + Math.floor(Math.random() * 30);
-
-                sampleList.push({
-                    visitorId: visitorId,
-                    isNewVisitor: isNew,
-                    timestamp: date.toISOString(),
-                    date: date.toISOString().slice(0, 10),
-                    year: isoWeek.year,
-                    week: isoWeek.week,
-                    yearWeek: isoWeek.yearWeek,
-                    dayOfWeek: dayOfWeek,
-                    path: '/',
-                    referrer: ref.name,
-                    referrerDomain: ref.domain,
-                    device: dev.type,
-                    os: dev.os,
-                    browser: dev.browser,
-                    screenWidth: parseInt(dev.screen.split('x')[0]),
-                    screenHeight: parseInt(dev.screen.split('x')[1]),
-                    language: 'en-US',
-                    country: loc.country,
-                    countryCode: loc.countryCode,
-                    city: loc.city
-                });
-            }
-        }
-
-        return sampleList.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
     }
 
     // Apply Time Range & Search Filters
@@ -731,14 +653,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-    });
-
-    // Demo Data Generation Button
-    document.getElementById('btn-seed-sample').addEventListener('click', () => {
-        const samples = generateSampleVisits();
-        rawVisits = samples;
-        localStorage.setItem('local_portfolio_visits', JSON.stringify(samples));
-        applyFilters();
     });
 
     // Config Modal Controls

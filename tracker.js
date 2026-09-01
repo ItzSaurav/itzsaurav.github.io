@@ -1,6 +1,6 @@
 /**
  * Saurav Mishra Portfolio - Visitor Tracker
- * Lightweight, privacy-conscious visitor logging for GitHub Pages & Firebase Firestore.
+ * Privacy-conscious visitor logging with 24-hour IP/visitor de-duplication.
  */
 
 (function() {
@@ -84,55 +84,60 @@
         return { device, os, browser };
     }
 
-    // Helper: Fast Geo lookup with timeout (Non-blocking)
+    // Helper: Fast Geo & IP lookup with timeout (Non-blocking)
     async function fetchGeoLocation() {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2000);
+        const timeoutId = setTimeout(() => controller.abort(), 2200);
         try {
             const res = await fetch('https://freeipapi.com/api/json', { signal: controller.signal });
             clearTimeout(timeoutId);
             if (res.ok) {
                 const data = await res.json();
                 return {
+                    ip: data.ipAddress || '',
                     country: data.countryName || 'Unknown',
                     countryCode: data.countryCode || 'UN',
                     city: data.cityName || 'Unknown'
                 };
             }
         } catch (e) {
-            // Geolocation fallback if blocked by ad-blocker or timeout
+            // Fallback
         }
-        return { country: 'Unknown', countryCode: 'UN', city: 'Unknown' };
+        return { ip: '', country: 'Unknown', countryCode: 'UN', city: 'Unknown' };
     }
 
-    // Main Log Visit Function
+    // Main Log Visit Function with 1-Day IP De-duplication
     async function logVisit() {
         const now = new Date();
-        const sessionKey = 'portfolio_active_session_' + now.toISOString().slice(0, 10);
-        
-        // Session de-duplication: log at most once per active session per day
-        const lastSession = sessionStorage.getItem(sessionKey);
-        if (lastSession) {
-            // Already logged this visit in the current session
+        const todayDateStr = now.toISOString().slice(0, 10); // YYYY-MM-DD
+        const { visitorId, isNew } = getVisitorId();
+
+        // 1. Fetch IP & Geo
+        const geo = await fetchGeoLocation();
+
+        // Build a unique daily identifier (IP-based or VisitorID-based)
+        const ipKeySegment = geo.ip ? 'ip_' + geo.ip.replace(/[^a-zA-Z0-9]/g, '_') : visitorId;
+        const dailyUniqueId = `${ipKeySegment}_${todayDateStr}`;
+
+        // 2. Check Daily De-duplication in Local Cache
+        const lastLoggedDate = localStorage.getItem('portfolio_last_log_date_' + ipKeySegment);
+        if (lastLoggedDate === todayDateStr) {
+            // Already counted this IP/visitor today. Skip duplicate counting.
             return;
         }
-        sessionStorage.setItem(sessionKey, now.getTime().toString());
 
-        const { visitorId, isNew } = getVisitorId();
         const isoWeek = getISOWeekInfo(now);
         const refInfo = parseReferrer(document.referrer);
         const env = getClientEnvironment();
-
         const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const dayOfWeek = days[now.getDay()];
 
-        const geo = await fetchGeoLocation();
-
         const visitRecord = {
+            id: dailyUniqueId,
             visitorId: visitorId,
             isNewVisitor: isNew,
             timestamp: now.toISOString(),
-            date: now.toISOString().slice(0, 10), // YYYY-MM-DD
+            date: todayDateStr,
             year: isoWeek.year,
             week: isoWeek.week,
             yearWeek: isoWeek.yearWeek,
@@ -151,6 +156,9 @@
             city: geo.city
         };
 
+        // Mark as counted for today
+        localStorage.setItem('portfolio_last_log_date_' + ipKeySegment, todayDateStr);
+
         // Determine if Firebase is configured
         const activeFirebaseConfig = window.isFirebaseConfigured ? window.isFirebaseConfigured() : null;
 
@@ -160,16 +168,15 @@
                     firebase.initializeApp(activeFirebaseConfig);
                 }
                 const db = firebase.firestore();
-                await db.collection('portfolio_visits').add(visitRecord);
-                console.log('[Tracker] Visit logged to Firebase Firestore successfully.');
+                // Use dailyUniqueId as document ID so the same IP can never have duplicate docs on the same day
+                await db.collection('portfolio_visits').doc(dailyUniqueId).set(visitRecord);
+                console.log('[Tracker] Unique daily visit logged to Firebase Firestore.');
             } catch (err) {
-                console.warn('[Tracker] Firebase log error, saving to local cache:', err.message);
+                console.warn('[Tracker] Firebase write fallback to local storage:', err.message);
                 saveToLocalStorage(visitRecord);
             }
         } else {
-            // Demo/Local Storage mode
             saveToLocalStorage(visitRecord);
-            console.log('[Tracker] Visit recorded in Local Storage (Demo/Dev mode).');
         }
     }
 
@@ -177,10 +184,14 @@
         try {
             const raw = localStorage.getItem('local_portfolio_visits');
             const list = raw ? JSON.parse(raw) : [];
-            list.unshift(record);
-            // Cap at 200 items for storage efficiency
-            if (list.length > 200) list.pop();
-            localStorage.setItem('local_portfolio_visits', JSON.stringify(list));
+            
+            // Check if record for this dailyUniqueId already exists
+            const exists = list.some(item => item.id === record.id);
+            if (!exists) {
+                list.unshift(record);
+                if (list.length > 200) list.pop();
+                localStorage.setItem('local_portfolio_visits', JSON.stringify(list));
+            }
         } catch (e) {
             console.error('[Tracker] Local storage write failed:', e);
         }
@@ -193,6 +204,5 @@
         logVisit();
     }
 
-    // Expose for testing
     window.logPortfolioVisit = logVisit;
 })();
