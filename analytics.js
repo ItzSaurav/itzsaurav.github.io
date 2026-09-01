@@ -246,17 +246,14 @@ document.addEventListener('DOMContentLoaded', () => {
         statusText.innerText = 'Live Tracking Active';
         isConnectedToFirebase = false;
 
-        // Auto-purge any legacy mock data from local storage
+        // Read real recorded visits
         const stored = localStorage.getItem('local_portfolio_visits');
         if (stored) {
             try {
                 const parsed = JSON.parse(stored);
-                // Keep only valid real visits that match the daily IP de-duplication schema
-                rawVisits = Array.isArray(parsed) ? parsed.filter(v => v.id && v.id.startsWith('ip_')) : [];
-                localStorage.setItem('local_portfolio_visits', JSON.stringify(rawVisits));
+                rawVisits = Array.isArray(parsed) ? parsed.filter(v => v.timestamp && v.date) : [];
             } catch (e) {
                 rawVisits = [];
-                localStorage.removeItem('local_portfolio_visits');
             }
         } else {
             rawVisits = [];

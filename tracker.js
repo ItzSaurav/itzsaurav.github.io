@@ -87,9 +87,9 @@
     // Helper: Fast Geo & IP lookup with timeout (Non-blocking)
     async function fetchGeoLocation() {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2200);
+        const timeoutId = setTimeout(() => controller.abort(), 2000);
         try {
-            const res = await fetch('https://freeipapi.com/api/json', { signal: controller.signal });
+            const res = await fetch('https://api.db-ip.com/v2/free/self', { signal: controller.signal });
             clearTimeout(timeoutId);
             if (res.ok) {
                 const data = await res.json();
@@ -97,11 +97,23 @@
                     ip: data.ipAddress || '',
                     country: data.countryName || 'Unknown',
                     countryCode: data.countryCode || 'UN',
-                    city: data.cityName || 'Unknown'
+                    city: data.city || 'Unknown'
                 };
             }
         } catch (e) {
-            // Fallback
+            // Fallback to secondary service
+            try {
+                const res2 = await fetch('https://freeipapi.com/api/json');
+                if (res2.ok) {
+                    const data2 = await res2.json();
+                    return {
+                        ip: data2.ipAddress || '',
+                        country: data2.countryName || 'Unknown',
+                        countryCode: data2.countryCode || 'UN',
+                        city: data2.cityName || 'Unknown'
+                    };
+                }
+            } catch (e2) {}
         }
         return { ip: '', country: 'Unknown', countryCode: 'UN', city: 'Unknown' };
     }
