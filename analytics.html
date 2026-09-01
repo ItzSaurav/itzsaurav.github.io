@@ -102,9 +102,9 @@
                 <p>Track weekly visitor traffic, referrer sources, device platforms, and live activity.</p>
             </div>
             <div class="analytics-controls">
-                <div id="status-badge" class="status-indicator demo">
+                <div id="status-badge" class="status-indicator tracking">
                     <span class="status-dot"></span>
-                    <span id="status-text">Local Storage Mode</span>
+                    <span id="status-text">Live Tracking Active</span>
                 </div>
                 <select id="time-range-select" class="select-input">
                     <option value="all">All Time</option>
@@ -257,14 +257,7 @@
             <p class="text-muted" style="font-size: 0.85rem; margin-bottom: 0.75rem;">
                 Paste your Web App Firebase config object below to connect live Firestore tracking:
             </p>
-            <textarea id="config-json-input" class="config-code" placeholder='{
-  "apiKey": "AIzaSy...",
-  "authDomain": "portfolio.firebaseapp.com",
-  "projectId": "portfolio-123",
-  "storageBucket": "portfolio-123.appspot.com",
-  "messagingSenderId": "123456789",
-  "appId": "1:123456789:web:abcdef"
-}'></textarea>
+            <textarea id="config-json-input" class="config-code" placeholder="{ &quot;apiKey&quot;: &quot;...&quot;, &quot;projectId&quot;: &quot;...&quot; }"></textarea>
             
             <div style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.2); padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem;">
                 <p class="text-muted" style="font-size: 0.8rem; line-height: 1.5;">
@@ -285,6 +278,6 @@
     </footer>
 
     <!-- Analytics Logic Script -->
-    <script src="analytics.js"></script>
+    <script src="analytics.js?v=20260901_3"></script>
 </body>
 </html>

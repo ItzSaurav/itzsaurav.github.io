@@ -242,16 +242,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const statusBadge = document.getElementById('status-badge');
         const statusText = document.getElementById('status-text');
         
-        statusBadge.className = 'status-indicator demo';
-        statusText.innerText = 'Local Storage Mode';
+        statusBadge.className = 'status-indicator tracking';
+        statusText.innerText = 'Live Tracking Active';
         isConnectedToFirebase = false;
 
+        // Auto-purge any legacy mock data from local storage
         const stored = localStorage.getItem('local_portfolio_visits');
         if (stored) {
             try {
-                rawVisits = JSON.parse(stored);
+                const parsed = JSON.parse(stored);
+                // Keep only valid real visits that match the daily IP de-duplication schema
+                rawVisits = Array.isArray(parsed) ? parsed.filter(v => v.id && v.id.startsWith('ip_')) : [];
+                localStorage.setItem('local_portfolio_visits', JSON.stringify(rawVisits));
             } catch (e) {
                 rawVisits = [];
+                localStorage.removeItem('local_portfolio_visits');
             }
         } else {
             rawVisits = [];
@@ -298,6 +303,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const now = new Date();
         const currentIsoWeek = getISOWeekInfo(now);
 
+        const weekVisitsEl = document.getElementById('metric-week-visits');
+        const weekTrendEl = document.getElementById('metric-week-trend');
+        const weeklyAvgEl = document.getElementById('metric-weekly-avg');
+        const totalVisitsEl = document.getElementById('metric-total-visits');
+        const uniqueVisitorsEl = document.getElementById('metric-unique-visitors');
+        const topReferrerEl = document.getElementById('metric-top-referrer');
+        const referrerPctEl = document.getElementById('metric-referrer-percentage');
+
+        if (rawVisits.length === 0) {
+            weekVisitsEl.innerText = '0';
+            weekTrendEl.className = 'metric-sub trend-neutral';
+            weekTrendEl.innerText = 'No visits recorded this week';
+            weeklyAvgEl.innerText = '0';
+            totalVisitsEl.innerText = '0';
+            uniqueVisitorsEl.innerText = '0 unique visitors';
+            topReferrerEl.innerText = 'None';
+            referrerPctEl.innerText = 'Awaiting visits';
+            return;
+        }
+
         const prevWeekDate = new Date(now);
         prevWeekDate.setDate(now.getDate() - 7);
         const prevIsoWeek = getISOWeekInfo(prevWeekDate);
@@ -318,8 +343,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentWeekCount = weekCounts[currentIsoWeek.yearWeek] || 0;
         const prevWeekCount = weekCounts[prevIsoWeek.yearWeek] || 0;
 
-        const weekVisitsEl = document.getElementById('metric-week-visits');
-        const weekTrendEl = document.getElementById('metric-week-trend');
         weekVisitsEl.innerText = currentWeekCount;
 
         if (prevWeekCount > 0) {
@@ -343,10 +366,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalWeeksRecorded = Object.keys(weekCounts).length || 1;
         const totalRawVisits = rawVisits.length;
         const weeklyAvg = (totalRawVisits / totalWeeksRecorded).toFixed(1);
-        document.getElementById('metric-weekly-avg').innerText = weeklyAvg;
+        weeklyAvgEl.innerText = weeklyAvg;
 
-        document.getElementById('metric-total-visits').innerText = filteredVisits.length;
-        document.getElementById('metric-unique-visitors').innerText = `${uniqueVisitors.size} unique visitors`;
+        totalVisitsEl.innerText = filteredVisits.length;
+        uniqueVisitorsEl.innerText = `${uniqueVisitors.size} unique visitors`;
 
         let topRef = 'Direct';
         let topRefCount = 0;
@@ -357,13 +380,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         const topRefPct = totalRawVisits > 0 ? Math.round((topRefCount / totalRawVisits) * 100) : 0;
-        document.getElementById('metric-top-referrer').innerText = topRef;
-        document.getElementById('metric-referrer-percentage').innerText = `${topRefCount} visits (${topRefPct}% of total)`;
+        topReferrerEl.innerText = topRef;
+        referrerPctEl.innerText = `${topRefCount} visits (${topRefPct}% of total)`;
     }
 
     // Render Charts
     function renderCharts() {
         const colors = getChartThemeColors();
+        const now = new Date();
+        const currentIso = getISOWeekInfo(now);
 
         // 1. Weekly Visits Chart
         const weeklyAgg = {};
@@ -373,8 +398,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const sortedWeeks = Object.keys(weeklyAgg).sort();
-        const recentWeeks = sortedWeeks.slice(-10);
-        const weeklyValues = recentWeeks.map(w => weeklyAgg[w]);
+        const recentWeeks = sortedWeeks.length > 0 ? sortedWeeks.slice(-10) : [currentIso.yearWeek];
+        const weeklyValues = sortedWeeks.length > 0 ? recentWeeks.map(w => weeklyAgg[w]) : [0];
 
         const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
         if (weeklyChartInstance) weeklyChartInstance.destroy();
@@ -424,8 +449,9 @@ document.addEventListener('DOMContentLoaded', () => {
             refAgg[ref] = (refAgg[ref] || 0) + 1;
         });
 
-        const refLabels = Object.keys(refAgg);
-        const refValues = Object.values(refAgg);
+        const refLabels = Object.keys(refAgg).length > 0 ? Object.keys(refAgg) : ['No Traffic Yet'];
+        const refValues = Object.keys(refAgg).length > 0 ? Object.values(refAgg) : [1];
+        const refColors = Object.keys(refAgg).length > 0 ? colors.palette.slice(0, refLabels.length) : [colors.gridColor];
 
         const refCtx = document.getElementById('referrerChart').getContext('2d');
         if (referrerChartInstance) referrerChartInstance.destroy();
@@ -436,7 +462,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 labels: refLabels,
                 datasets: [{
                     data: refValues,
-                    backgroundColor: colors.palette.slice(0, refLabels.length),
+                    backgroundColor: refColors,
                     borderWidth: 1,
                     borderColor: colors.cardBg
                 }]
