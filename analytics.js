@@ -14,8 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let isConnectedToFirebase = false;
     let isAuthenticated = false;
 
-    // Default Passcode Hash (SHA-256 of "saurav2026")
-    const DEFAULT_PASSCODE_HASH = "372dc8da4394c05e52236696859e54517b747f00da06386a5911b0c695d9d48f";
+    // Default Passcode Hash (SHA-256 of "Dxstream")
+    const DEFAULT_PASSCODE_HASH = "4cf23871cbaa530433a075ce5652e22669475c5c0d7225073645c162bde2b6b6";
 
     // Chart Instances
     let weeklyChartInstance = null;
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const activeHash = localStorage.getItem('custom_admin_passcode_hash') || DEFAULT_PASSCODE_HASH;
 
-            if (hashedInput === activeHash || inputVal === 'saurav2026') {
+            if (hashedInput === activeHash || inputVal === 'Dxstream') {
                 errorEl.style.display = 'none';
                 grantAccess();
             } else {
