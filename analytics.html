@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Private Visitor Analytics | Saurav Mishra</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="analytics.css">
+    
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Firebase App, Firestore, & Auth (Compat for static HTML) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    
+    <!-- Tracking Config -->
+    <script src="firebase-config.js"></script>
+</head>
+<body>
+
+    <!-- Minimalist Navigation Bar -->
+    <nav class="navbar minimal">
+        <div class="logo">
+            <a href="index.html">Saurav. <span class="text-accent" style="font-size: 0.95rem; font-weight: 500;">/ Private Analytics</span></a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="index.html#projects">Projects</a></li>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <button id="btn-lock-session" class="btn btn-secondary" style="padding: 0.35rem 0.8rem; font-size: 0.8rem; display: none;">Lock</button>
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="checkbox" aria-label="Toggle dark and light theme">
+                    <input type="checkbox" id="checkbox" />
+                    <div class="slider round">
+                        <span class="icon-sun">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                        </span>
+                        <span class="icon-moon">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                        </span>
+                    </div>
+                </label>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Authentication Lock Screen Gate -->
+    <div id="auth-lock-overlay" class="auth-overlay">
+        <div class="card auth-card">
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <div class="auth-icon-badge">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                </div>
+                <h2 style="font-size: 1.4rem; font-weight: 700; margin-top: 0.75rem;">Private Analytics Access</h2>
+                <p class="text-muted" style="font-size: 0.85rem;">This dashboard is restricted to Saurav Mishra.</p>
+            </div>
+
+            <!-- Auth Tabs -->
+            <div class="auth-tabs">
+                <button id="tab-passcode" class="auth-tab active">Passcode / PIN</button>
+                <button id="tab-firebase-auth" class="auth-tab">Firebase Admin Login</button>
+            </div>
+
+            <!-- Passcode Form -->
+            <form id="form-passcode-auth" class="auth-form-body">
+                <label class="metric-label" for="input-passcode">Enter Admin Passcode</label>
+                <input type="password" id="input-passcode" class="text-input" placeholder="Enter passcode" required autofocus style="width: 100%; margin-bottom: 1rem;">
+                <div id="auth-error-passcode" class="auth-error-msg" style="display: none;"></div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">Unlock Dashboard</button>
+                <p class="text-muted text-center" style="font-size: 0.78rem; margin-top: 0.75rem;">Default local passcode: <code>saurav2026</code> (customizable)</p>
+            </form>
+
+            <!-- Firebase Auth Form -->
+            <form id="form-firebase-auth" class="auth-form-body" style="display: none;">
+                <label class="metric-label" for="input-fb-email">Firebase Admin Email</label>
+                <input type="email" id="input-fb-email" class="text-input" placeholder="admin@example.com" style="width: 100%; margin-bottom: 0.75rem;">
+                
+                <label class="metric-label" for="input-fb-password">Password</label>
+                <input type="password" id="input-fb-password" class="text-input" placeholder="Your Firebase password" style="width: 100%; margin-bottom: 1rem;">
+                
+                <div id="auth-error-firebase" class="auth-error-msg" style="display: none;"></div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">Sign In with Firebase</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Analytics Content (Protected) -->
+    <main id="dashboard-main-content" class="analytics-container" style="display: none;">
+        
+        <!-- Header & Toolbar -->
+        <header class="analytics-header">
+            <div class="analytics-title-group">
+                <h1>Visitor Analytics & Logs</h1>
+                <p>Track weekly visitor traffic, referrer sources, device platforms, and live activity.</p>
+            </div>
+            <div class="analytics-controls">
+                <div id="status-badge" class="status-indicator demo">
+                    <span class="status-dot"></span>
+                    <span id="status-text">Local / Demo Mode</span>
+                </div>
+                <select id="time-range-select" class="select-input">
+                    <option value="all">All Time</option>
+                    <option value="year">This Year</option>
+                    <option value="30days">Last 30 Days</option>
+                    <option value="7days" selected>Last 7 Days</option>
+                </select>
+                <button id="btn-refresh" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Refresh</button>
+                <button id="btn-config-modal" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Security & Firebase Setup</button>
+            </div>
+        </header>
+
+        <!-- KPI Metric Summary Cards -->
+        <section class="metrics-grid">
+            <div class="card metric-card">
+                <span class="metric-label">Visits This Week</span>
+                <span id="metric-week-visits" class="metric-value">0</span>
+                <span id="metric-week-trend" class="metric-sub trend-neutral">Calculating trend...</span>
+            </div>
+            
+            <div class="card metric-card">
+                <span class="metric-label">Weekly Average</span>
+                <span id="metric-weekly-avg" class="metric-value">0</span>
+                <span class="metric-sub">Average visits per week</span>
+            </div>
+
+            <div class="card metric-card">
+                <span class="metric-label">Total Visits / Unique</span>
+                <span id="metric-total-visits" class="metric-value">0</span>
+                <span id="metric-unique-visitors" class="metric-sub">0 unique visitors</span>
+            </div>
+
+            <div class="card metric-card">
+                <span class="metric-label">Top Referrer</span>
+                <span id="metric-top-referrer" class="metric-value" style="font-size: 1.5rem; word-break: break-all;">Direct</span>
+                <span id="metric-referrer-percentage" class="metric-sub">Primary traffic channel</span>
+            </div>
+        </section>
+
+        <!-- Primary Charts: Weekly Trend & Referrers -->
+        <section class="charts-grid">
+            <div class="card chart-card">
+                <div class="chart-header">
+                    <h2 class="chart-title">Weekly Visits Trend</h2>
+                    <span class="text-muted" style="font-size: 0.8rem;">Visits grouped by ISO Week</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="weeklyChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card chart-card">
+                <div class="chart-header">
+                    <h2 class="chart-title">Referrer Sources</h2>
+                    <span class="text-muted" style="font-size: 0.8rem;">Where visitors come from</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="referrerChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Secondary Charts: Daily Breakdown & Devices -->
+        <section class="charts-secondary-grid">
+            <div class="card chart-card">
+                <div class="chart-header">
+                    <h2 class="chart-title">Daily Activity (Day of Week)</h2>
+                    <span class="text-muted" style="font-size: 0.8rem;">Traffic volume by weekday</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="dailyChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card chart-card">
+                <div class="chart-header">
+                    <h2 class="chart-title">Device & OS Breakdown</h2>
+                    <span class="text-muted" style="font-size: 0.8rem;">Desktop vs Mobile vs Tablet</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="deviceChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed Visitor Log Table -->
+        <section class="logs-section">
+            <div class="logs-header">
+                <div>
+                    <h2 class="section-title mb-0" style="font-size: 1.4rem;">Recent Visitor Logs</h2>
+                    <p class="text-muted" style="font-size: 0.85rem;">Detailed event stream of visitor sessions.</p>
+                </div>
+                <div class="logs-actions">
+                    <input type="text" id="log-search-input" class="text-input" placeholder="Search referrer, country, OS..." style="width: 220px;">
+                    <button id="btn-export-csv" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Export CSV</button>
+                    <button id="btn-seed-sample" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Generate Demo Data</button>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="logs-table">
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Referrer</th>
+                            <th>Location</th>
+                            <th>Device / OS</th>
+                            <th>Browser</th>
+                            <th>Page</th>
+                            <th>Visitor</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logs-tbody">
+                        <tr>
+                            <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading visitor records...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                <span id="pagination-info">Showing 0 of 0 records</span>
+                <div class="pagination-buttons">
+                    <button id="btn-prev-page" class="btn btn-secondary" style="padding: 0.35rem 0.8rem; font-size: 0.8rem;" disabled>&larr; Previous</button>
+                    <button id="btn-next-page" class="btn btn-secondary" style="padding: 0.35rem 0.8rem; font-size: 0.8rem;" disabled>Next &rarr;</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Security & Firebase Setup Modal -->
+    <div id="config-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="font-size: 1.2rem; font-weight: 600;">Security & Firebase Configuration</h3>
+                <button id="btn-close-modal" class="modal-close">&times;</button>
+            </div>
+            
+            <div style="margin-bottom: 1.5rem;">
+                <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem;">Change Admin Passcode</h4>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="password" id="input-new-passcode" class="text-input" placeholder="New passcode" style="flex: 1;">
+                    <button id="btn-save-new-passcode" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Update PIN</button>
+                </div>
+            </div>
+
+            <hr style="border: none; border-top: 1px solid var(--border-color); margin: 1.25rem 0;">
+
+            <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem;">Firebase Firestore Configuration</h4>
+            <p class="text-muted" style="font-size: 0.85rem; margin-bottom: 0.75rem;">
+                Paste your Web App Firebase config object below to connect live Firestore tracking:
+            </p>
+            <textarea id="config-json-input" class="config-code" placeholder='{
+  "apiKey": "AIzaSy...",
+  "authDomain": "portfolio.firebaseapp.com",
+  "projectId": "portfolio-123",
+  "storageBucket": "portfolio-123.appspot.com",
+  "messagingSenderId": "123456789",
+  "appId": "1:123456789:web:abcdef"
+}'></textarea>
+            
+            <div style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.2); padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem;">
+                <p class="text-muted" style="font-size: 0.8rem; line-height: 1.5;">
+                    <strong style="color: var(--text-main);">Security Note:</strong> Deploy the <code>firestore.rules</code> file in your repo to the Firebase Console so that only you can read or delete analytics records while anonymous visitors can only create logs.
+                </p>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
+                <button id="btn-clear-config" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Reset to Demo</button>
+                <button id="btn-save-config" class="btn btn-primary" style="padding: 0.5rem 1.2rem; font-size: 0.85rem;">Save & Connect</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="minimal-footer">
+        <p>&copy; 2026 Saurav Mishra. Developer Portfolio Analytics.</p>
+    </footer>
+
+    <!-- Analytics Logic Script -->
+    <script src="analytics.js"></script>
+</body>
+</html>

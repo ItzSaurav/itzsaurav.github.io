@@ -141,4 +141,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     fetchTechNews();
+
+    // Discreet Private Shortcut to Analytics Dashboard (Ctrl + Shift + A or triple-click footer)
+    document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+            e.preventDefault();
+            window.location.href = 'analytics.html';
+        }
+    });
+
+    const footerCopyright = document.getElementById('footer-copyright');
+    if (footerCopyright) {
+        let clickCount = 0;
+        let clickTimer = null;
+        footerCopyright.addEventListener('click', () => {
+            clickCount++;
+            clearTimeout(clickTimer);
+            if (clickCount >= 3) {
+                window.location.href = 'analytics.html';
+                clickCount = 0;
+            } else {
+                clickTimer = setTimeout(() => { clickCount = 0; }, 600);
+            }
+        });
+    }
 });
