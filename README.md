@@ -8,7 +8,7 @@ Source code for my personal developer portfolio hosted on GitHub Pages. Built fr
 
 ## The Philosophy
 
-A lot of modern portfolio templates ship 50MB of JavaScript just to render a couple of text blocks and some links. Tbh that never sat right with me.
+A lot of modern portfolio templates ship huge bundles of JavaScript just to render a couple of text blocks and some links. I wanted something much lighter, simpler, and more direct.
 
 I wanted a portfolio that:
 - Loads in milliseconds on any network connection.
@@ -62,7 +62,7 @@ itzsaurav.github.io/
 
 ## Local Development Quickstart
 
-Running this locally takes literally five seconds bro since there are no build steps, compilers, or bundlers required.
+Running this locally is very straightforward since there are no build steps, compilers, or bundlers required.
 
 ### 1. Clone the Repo
 ```bash
