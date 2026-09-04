@@ -2,19 +2,19 @@
 
 Live site: [itzsaurav.github.io](https://itzsaurav.github.io)
 
-This is the source code for my personal developer portfolio hosted on GitHub Pages. Built from the ground up with pure vanilla web standards — zero heavy framework bloat, zero massive node_modules folders, and zero unnecessary runtime overhead. Just clean, fast, accessible code that loads instantly.
+Source code for my personal developer portfolio hosted on GitHub Pages. Built from the ground up with pure vanilla web standards — zero heavy framework bloat, zero massive node_modules folders, and zero tracking scripts. Just clean, fast, accessible code that loads instantly.
 
 ---
 
 ## The Philosophy
 
-A lot of modern portfolio templates ship 50MB of JavaScript just to render a couple of text blocks and some links. Tbh that never sat right with me. 
+A lot of modern portfolio templates ship 50MB of JavaScript just to render a couple of text blocks and some links. Tbh that never sat right with me.
 
 I wanted a portfolio that:
 - Loads in milliseconds on any network connection.
+- Is 100% static with zero external trackers, analytics, or surveillance cookies.
 - Looks clean in both dark and light modes with persistent theme state.
-- Respects visitor privacy while still giving me real traffic metrics.
-- Uses native browser APIs and zero-dependency vanilla JavaScript.
+- Uses native browser APIs, clean Lucide SVG icons, and zero-dependency vanilla JavaScript.
 
 ---
 
@@ -22,18 +22,16 @@ I wanted a portfolio that:
 
 ### 1. Core Portfolio Experience (`index.html`)
 - Clean, responsive layout with custom CSS design tokens and fluid typography.
-- Interactive hero section with typewriter dynamic text rotation.
+- Interactive hero section with typewriter dynamic text rotation and Lucide-enhanced action buttons.
 - Showcase cards for all my core active projects with direct GitHub and live demo links.
 - Verified skills breakdown covering backend development, systems, and automation.
 - Live tech news feed dynamically pulled from the official Hacker News Firebase REST API.
 - Quick contact endpoints and direct links to my verified PDF resume.
 
-### 2. Custom Visitor Analytics Dashboard (`analytics.html`)
-Instead of slapping invasive third-party ad trackers or heavy telemetry scripts on the site, I built a custom, privacy-focused analytics engine:
-- **Telemetry Tracker (`tracker.js`)**: Captures visit events, referrer sources (LinkedIn, GitHub, Google, direct), screen resolutions, and OS/browser environments without collecting personal data.
-- **Backend Logging**: Stores aggregated event batches directly into Google Cloud Firestore with locked-down security rules.
-- **Visual Analytics Suite (`analytics.js`)**: Interactive Chart.js graphs displaying daily visitor trends, weekly volume comparisons, referrer distributions, and device breakdowns.
-- **Export Utility**: One-click raw CSV telemetry export straight from the browser.
+### 2. Styling & Iconography (`style.css`)
+- Light and dark theme palettes with smooth CSS transitions.
+- Native Lucide stroke SVG icons (ISC license) integrated directly for GitHub, LinkedIn, categories, external links, and contact channels.
+- Fully responsive navigation with animated mobile drawer and accessible ARIA attributes.
 
 ---
 
@@ -41,9 +39,8 @@ Instead of slapping invasive third-party ad trackers or heavy telemetry scripts 
 
 - **Markup & Layout**: Semantic HTML5, CSS3 Custom Properties (Variables), Flexbox, CSS Grid.
 - **Scripting**: Vanilla JavaScript (ES6+), async/await fetch pipelines.
-- **Data & Storage**: Firebase Cloud Firestore.
-- **Visualizations**: Chart.js for telemetry graphs.
-- **External Feeds**: Hacker News Firebase API.
+- **Iconography**: Lucide Icons (pure inline SVGs, zero AI generation, zero font files).
+- **External Feeds**: Hacker News public REST API.
 - **Hosting & CI/CD**: GitHub Pages with automatic branch deployment.
 
 ---
@@ -55,12 +52,6 @@ itzsaurav.github.io/
 ├── index.html              # Main portfolio landing page
 ├── style.css               # Core styling, design tokens, and theme definitions
 ├── script.js               # Theme toggling, typewriter effect, HN feed logic
-├── analytics.html          # Custom telemetry and analytics dashboard
-├── analytics.css           # Dashboard-specific layout and widget styles
-├── analytics.js           # Chart.js rendering and Firestore data aggregations
-├── tracker.js              # Client-side session and visit logger
-├── firebase-config.js      # Firestore project configuration
-├── firestore.rules         # Strict write/read security rules
 ├── Saurav_Mishra_Resume.pdf# Current verified resume
 ├── sitemap.xml             # Search engine index map
 ├── robots.txt              # Crawler access definitions
