@@ -104,6 +104,104 @@ document.addEventListener('DOMContentLoaded', () => {
 
     revealElements.forEach(el => revealOnScroll.observe(el));
 
+    // GSAP Scroll Sliding Animations
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        gsap.registerPlugin(ScrollTrigger);
+
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (!prefersReducedMotion) {
+            // Hero Typography Slide-In
+            const heroTimeline = gsap.timeline({
+                defaults: { ease: "power3.out", duration: 0.9 }
+            });
+
+            heroTimeline
+                .from(".hero .title", { y: 40, opacity: 0, delay: 0.15 })
+                .from(".hero .typing-container", { y: 30, opacity: 0 }, "-=0.6")
+                .from(".hero .description", { y: 30, opacity: 0 }, "-=0.6")
+                .from(".hero .hero-links .btn", { y: 20, opacity: 0, stagger: 0.15 }, "-=0.5");
+
+            // FreeDot Linux - System Pipeline Slide-In (Sequential as you scroll down)
+            const pipelineStages = document.querySelectorAll('#freedot .pipeline-stage');
+            pipelineStages.forEach((stage) => {
+                gsap.from(stage, {
+                    scrollTrigger: {
+                        trigger: stage,
+                        start: "top 85%",
+                        toggleActions: "play none none none"
+                    },
+                    x: -60,
+                    opacity: 0,
+                    duration: 0.85,
+                    ease: "power3.out",
+                    onComplete: () => {
+                        gsap.set(stage, { clearProps: "transform" });
+                    }
+                });
+            });
+
+            // Vertical Projects Section - Project Cards Alternating Slide-In
+            const projectCards = document.querySelectorAll('#projects .project-card');
+            projectCards.forEach((card, index) => {
+                const fromLeft = index % 2 === 0;
+                gsap.from(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 85%",
+                        toggleActions: "play none none none"
+                    },
+                    x: fromLeft ? -75 : 75,
+                    opacity: 0,
+                    duration: 0.9,
+                    ease: "power3.out",
+                    onComplete: () => {
+                        gsap.set(card, { clearProps: "transform" });
+                    }
+                });
+            });
+
+            // Open Source Contributions - Rows Slide-In
+            const contributionRows = document.querySelectorAll('#contributions .contribution-row');
+            contributionRows.forEach((row) => {
+                gsap.from(row, {
+                    scrollTrigger: {
+                        trigger: row,
+                        start: "top 88%",
+                        toggleActions: "play none none none"
+                    },
+                    x: -45,
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: "power3.out",
+                    onComplete: () => {
+                        gsap.set(row, { clearProps: "transform" });
+                    }
+                });
+            });
+
+            // Settle animations immediately if preview=settled query parameter is present
+            if (window.location.search.includes('preview=settled')) {
+                heroTimeline.progress(1);
+                ScrollTrigger.getAll().forEach(st => {
+                    if (st.animation) st.animation.progress(1);
+                });
+                const targetParam = new URLSearchParams(window.location.search).get('target');
+                if (targetParam) {
+                    const sections = ['home', 'about', 'freedot', 'projects', 'contributions', 'news', 'contact'];
+                    const targetIdx = sections.indexOf(targetParam);
+                    if (targetIdx > 0) {
+                        for (let i = 0; i < targetIdx; i++) {
+                            const prevEl = document.getElementById(sections[i]);
+                            if (prevEl) prevEl.style.display = 'none';
+                        }
+                    }
+                    ScrollTrigger.refresh();
+                }
+            }
+        }
+    }
+
     // Fetch Live Tech News from Hacker News API
     async function fetchTechNews() {
         const loader = document.getElementById('news-loader');

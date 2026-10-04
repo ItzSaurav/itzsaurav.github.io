@@ -27,6 +27,7 @@
         <ul class="nav-links">
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About & Skills</a></li>
+            <li><a href="#freedot">FreeDot Linux</a></li>
             <li><a href="#projects">Projects</a></li>
             <li><a href="#contributions">Open Source</a></li>
             <li><a href="#news">Tech Feed</a></li>
@@ -147,16 +148,98 @@
         </div>
     </section>
 
+    <section id="freedot" class="freedot section">
+        <div class="reveal">
+            <div class="section-header">
+                <div class="project-header">
+                    <h2 class="section-title mb-0">FreeDot Linux</h2>
+                    <span class="status-badge ongoing">System Pipeline</span>
+                </div>
+                <p class="description mt-small">A personal, minimal Linux distribution and custom C++20 PID 1 init system built from scratch under strict resource constraints (&le; 600 MB memory footprint). Explore the sequential boot architecture below.</p>
+                <div class="project-links mb-medium">
+                    <a href="https://github.com/ItzSaurav/freedot-linux" target="_blank" rel="noopener noreferrer" class="link-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="link-icon"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg> Track on GitHub &rarr;</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="system-pipeline" id="system-pipeline">
+            <div class="pipeline-stage card">
+                <div class="stage-step">01</div>
+                <div class="stage-content">
+                    <div class="stage-header">
+                        <h3>Stage 1: Firmware &amp; Kernel Bootstrap</h3>
+                        <span class="mini-tag">BIOS / UEFI &rarr; bzImage</span>
+                    </div>
+                    <p class="text-muted">Firmware initializes hardware and hands execution to the bootloader, loading the upstream Linux LTS kernel into RAM. The kernel unpacks the compressed initramfs CPIO archive into an in-memory rootfs and initializes device drivers.</p>
+                    <div class="stage-details">
+                        <span class="detail-pill">BIOS/UEFI Handoff</span>
+                        <span class="detail-pill">Kernel Unpack</span>
+                        <span class="detail-pill">initramfs Rootfs</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pipeline-stage card">
+                <div class="stage-step">02</div>
+                <div class="stage-content">
+                    <div class="stage-header">
+                        <h3>Stage 2: PID 1 Supervisor Initialization</h3>
+                        <span class="mini-tag">src/init.cpp</span>
+                    </div>
+                    <p class="text-muted">Kernel transfers control to /init as PID 1. The custom C++ supervisor mounts essential virtual filesystems (/proc, /sys, /dev, /run), brings up loopback (lo) and ethernet (eth0) network interfaces via kernel socket ioctls, and establishes SIGCHLD zombie reaping.</p>
+                    <div class="stage-details">
+                        <span class="detail-pill">Mount /proc, /sys, /dev, /run</span>
+                        <span class="detail-pill">Network ioctl Bringup</span>
+                        <span class="detail-pill">Zombie Reaping</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pipeline-stage card">
+                <div class="stage-step">03</div>
+                <div class="stage-content">
+                    <div class="stage-header">
+                        <h3>Stage 3: Service Dependency Ordering &amp; IPC</h3>
+                        <span class="mini-tag">Topological Sort</span>
+                    </div>
+                    <p class="text-muted">The init supervisor parses declarative service unit manifests in /etc/freedot.d/*.conf, computes safe startup order using directed acyclic graph topological sorting, binds the /run/freedot.sock UNIX domain socket, and launches telemetry daemons.</p>
+                    <div class="stage-details">
+                        <span class="detail-pill">DAG Dependency Order</span>
+                        <span class="detail-pill">/run/freedot.sock</span>
+                        <span class="detail-pill">statsd &amp; logger Daemons</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pipeline-stage card">
+                <div class="stage-step">04</div>
+                <div class="stage-content">
+                    <div class="stage-header">
+                        <h3>Stage 4: Userspace Execution &amp; Interactive Console</h3>
+                        <span class="mini-tag">Interactive Shell</span>
+                    </div>
+                    <p class="text-muted">Spawns an interactive BusyBox shell (/bin/sh) attached to /dev/console. Exposes the freedotctl CLI client communicating over the IPC socket for real-time process monitoring, service restarts, and clean shutdown.</p>
+                    <div class="stage-details">
+                        <span class="detail-pill">/bin/sh on /dev/console</span>
+                        <span class="detail-pill">freedotctl CLI</span>
+                        <span class="detail-pill">Graceful Poweroff/Reboot</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="projects" class="projects section">
         <div class="reveal">
             <h2 class="section-title">Featured Projects</h2>
-            <div class="project-grid">
+        </div>
+        <div class="project-grid">
 
                 <div class="card project-card">
                     <div class="project-info">
                         <div class="project-header">
                             <h3>FreeDot Linux</h3>
-                            <span class="status-badge ongoing">Learning Project</span>
+                            <span class="status-badge ongoing">Flagship Project</span>
                         </div>
                         <p class="text-muted">A hands-on learning project I am actively using to learn how Linux works from the ground up: kernel booting, writing a minimal C++ init system (PID 1), userspace initialization, mounting /proc and /sys, and experimenting with networking under a 600 MB memory limit.</p>
                         <div class="project-tags">
@@ -168,6 +251,7 @@
                             <span class="mini-tag">QEMU</span>
                         </div>
                         <div class="project-links mt-small">
+                            <a href="#freedot" class="link-arrow">View System Pipeline &uarr;</a>
                             <a href="https://github.com/ItzSaurav/freedot-linux" target="_blank" rel="noopener noreferrer" class="link-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="link-icon"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg> Track on GitHub &rarr;</a>
                         </div>
                     </div>
@@ -255,16 +339,16 @@
                 </div>
 
             </div>
-        </div>
     </section>
 
-        <section id="contributions" class="contributions section">
+    <section id="contributions" class="contributions section">
         <div class="reveal">
             <h2 class="section-title">Open Source Contributions</h2>
             <p class="description mb-medium">Actively contributing to open-source codebases, developer tooling, documentation, and datasets.</p>
-            <div class="project-grid">
+        </div>
+        <div class="project-grid contributions-grid">
 
-                <div class="card project-card">
+                <div class="card project-card contribution-row">
                     <div class="project-info">
                         <div class="project-header">
                             <h3>first-contributions</h3>
@@ -282,7 +366,7 @@
                     </div>
                 </div>
 
-                <div class="card project-card">
+                <div class="card project-card contribution-row">
                     <div class="project-info">
                         <div class="project-header">
                             <h3>kana-dojo</h3>
@@ -300,7 +384,7 @@
                     </div>
                 </div>
 
-                <div class="card project-card">
+                <div class="card project-card contribution-row">
                     <div class="project-info">
                         <div class="project-header">
                             <h3>python-vibe</h3>
@@ -318,7 +402,7 @@
                     </div>
                 </div>
 
-                <div class="card project-card">
+                <div class="card project-card contribution-row">
                     <div class="project-info">
                         <div class="project-header">
                             <h3>composable-data-stack</h3>
@@ -335,7 +419,7 @@
                     </div>
                 </div>
 
-                <div class="card project-card">
+                <div class="card project-card contribution-row">
                     <div class="project-info">
                         <div class="project-header">
                             <h3>vscode-agent-bell</h3>
@@ -353,7 +437,7 @@
                     </div>
                 </div>
 
-                <div class="card project-card">
+                <div class="card project-card contribution-row">
                     <div class="project-info">
                         <div class="project-header">
                             <h3>CONTINUUM</h3>
@@ -371,7 +455,7 @@
                     </div>
                 </div>
 
-                <div class="card project-card">
+                <div class="card project-card contribution-row">
                     <div class="project-info">
                         <div class="project-header">
                             <h3>rocketmq-rust</h3>
@@ -388,7 +472,7 @@
                     </div>
                 </div>
 
-                <div class="card project-card">
+                <div class="card project-card contribution-row">
                     <div class="project-info">
                         <div class="project-header">
                             <h3>lark</h3>
@@ -406,7 +490,7 @@
                     </div>
                 </div>
 
-                <div class="card project-card">
+                <div class="card project-card contribution-row">
                     <div class="project-info">
                         <div class="project-header">
                             <h3>30-Days-30-Python-Projects</h3>
@@ -424,7 +508,7 @@
                     </div>
                 </div>
 
-                <div class="card project-card">
+                <div class="card project-card contribution-row">
                     <div class="project-info">
                         <div class="project-header">
                             <h3>AAA (AI Coding Agents)</h3>
@@ -443,7 +527,6 @@
                 </div>
 
             </div>
-        </div>
     </section>
 
     <section id="news" class="news section">
@@ -480,6 +563,8 @@
         <p id="footer-copyright">&copy; 2026 Saurav Mishra. Student developer. Learning and building every day.</p>
     </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
