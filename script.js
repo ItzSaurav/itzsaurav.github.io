@@ -19,12 +19,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }    
     });
 
-    // Typing Effect - honest titles
+    // Typing Effect - Systems & Architecture titles
     const texts = [
-        "Student & Developer.",
-        "Python & JavaScript Learner.",
-        "Automation Enthusiast.",
-        "Building side projects."
+        "C++ & Systems Engineer.",
+        "Linux Kernel & PID 1 Architect.",
+        "Low-Latency Tooling & Engines.",
+        "Full-Stack & Intelligent Pipelines."
     ];
     let count = 0;
     let index = 0;
@@ -94,6 +94,110 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Timezone Telemetry (Asia/Kolkata, UTC+5:30)
+    function initTimezoneTelemetry() {
+        const telemetryEl = document.getElementById('status-telemetry');
+        if (!telemetryEl) return;
+
+        const updateClock = () => {
+            try {
+                const now = new Date();
+                const formatter = new Intl.DateTimeFormat('en-US', {
+                    timeZone: 'Asia/Kolkata',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                });
+                telemetryEl.textContent = `${formatter.format(now)} IST`;
+            } catch {
+                telemetryEl.textContent = 'BLR (UTC+5:30)';
+            }
+        };
+
+        updateClock();
+        setInterval(updateClock, 1000);
+    }
+    initTimezoneTelemetry();
+
+    // Accessible One-Click Email Copy with 1.8s feedback
+    function initEmailCopy() {
+        const emailLink = document.getElementById('email-dispatch');
+        const emailVal = document.getElementById('email-val');
+        const copyStatus = document.getElementById('copy-status');
+        if (!emailLink || !emailVal) return;
+
+        let revertTimer = null;
+
+        emailLink.addEventListener('click', (e) => {
+            // Only intercept primary left clicks without modifier keys
+            if (e.button === 0 && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey) {
+                e.preventDefault();
+                const targetEmail = 'saurav.mishra.dev@gmail.com';
+
+                const applySuccess = () => {
+                    if (revertTimer) clearTimeout(revertTimer);
+                    emailVal.textContent = '[copied!]';
+                    emailVal.classList.add('text-accent-highlight');
+                    if (copyStatus) copyStatus.textContent = 'Email address copied to clipboard.';
+
+                    revertTimer = setTimeout(() => {
+                        emailVal.textContent = 'contact';
+                        emailVal.classList.remove('text-accent-highlight');
+                        if (copyStatus) copyStatus.textContent = '';
+                        revertTimer = null;
+                    }, 1800);
+                };
+
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(targetEmail)
+                        .then(applySuccess)
+                        .catch(() => {
+                            window.location.href = emailLink.href;
+                        });
+                } else {
+                    window.location.href = emailLink.href;
+                }
+            }
+        });
+    }
+    initEmailCopy();
+
+    // Hero Radial Sheen (Bounded pointer tracking with rAF throttle)
+    function initHeroSpotlight() {
+        const heroSection = document.getElementById('home');
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!heroSection || prefersReducedMotion) return;
+
+        let rafId = null;
+        let latestX = 0;
+        let latestY = 0;
+
+        heroSection.addEventListener('pointermove', (e) => {
+            const rect = heroSection.getBoundingClientRect();
+            latestX = e.clientX - rect.left;
+            latestY = e.clientY - rect.top;
+
+            if (!rafId) {
+                rafId = requestAnimationFrame(() => {
+                    heroSection.style.setProperty('--mouse-x', `${latestX}px`);
+                    heroSection.style.setProperty('--mouse-y', `${latestY}px`);
+                    rafId = null;
+                });
+            }
+        }, { passive: true });
+
+        heroSection.addEventListener('pointerleave', () => {
+            if (rafId) {
+                cancelAnimationFrame(rafId);
+                rafId = null;
+            }
+            heroSection.style.removeProperty('--mouse-x');
+            heroSection.style.removeProperty('--mouse-y');
+        }, { passive: true });
+    }
+    initHeroSpotlight();
+
     // Scroll Reveal Animation using bidirectional Intersection Observer
     const revealElements = document.querySelectorAll('.reveal');
     if (revealElements.length > 0) {
@@ -143,16 +247,17 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             heroTimeline
-                .from(".hero .title", { y: 40, opacity: 0, duration: 1.05, delay: 0.1 })
-                .from(".hero .typing-container", { y: 25, opacity: 0, duration: 0.7 }, "-=0.65")
-                .from(".hero .description", { y: 25, opacity: 0, duration: 0.75 }, "-=0.55")
-                .from(".hero .hero-links .btn", { 
-                    y: 18, 
+                .from(".hero .status-pill-wrapper", { y: 20, opacity: 0, duration: 0.6, delay: 0.1 })
+                .from(".hero .title", { y: 35, opacity: 0, duration: 0.95 }, "-=0.45")
+                .from(".hero .typing-container", { y: 20, opacity: 0, duration: 0.65 }, "-=0.6")
+                .from(".hero .description", { y: 20, opacity: 0, duration: 0.7 }, "-=0.5")
+                .from(".hero .dispatch-item", { 
+                    y: 15, 
                     opacity: 0, 
-                    stagger: 0.12, 
-                    duration: 0.65, 
+                    stagger: 0.08, 
+                    duration: 0.55, 
                     ease: "back.out(1.2)" 
-                }, "-=0.45");
+                }, "-=0.4");
 
             // Subtle re-entrance when scrolling all the way back up to hero
             ScrollTrigger.create({
@@ -160,9 +265,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 start: "top top",
                 end: "bottom 20%",
                 onEnterBack: () => {
-                    gsap.fromTo([".hero .title", ".hero .typing-container", ".hero .description", ".hero .hero-links .btn"],
-                        { opacity: 0.4, y: 15 },
-                        { opacity: 1, y: 0, stagger: 0.08, duration: 0.6, ease: "power2.out", overwrite: "auto" }
+                    gsap.fromTo([".hero .status-pill-wrapper", ".hero .title", ".hero .typing-container", ".hero .description", ".hero .dispatch-item"],
+                        { opacity: 0.4, y: 12 },
+                        { opacity: 1, y: 0, stagger: 0.06, duration: 0.5, ease: "power2.out", overwrite: "auto" }
                     );
                 }
             });
@@ -251,10 +356,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // Vertical Projects Section - Alternating Slide-In from Left and Right (Bidirectional)
-            const projectCards = document.querySelectorAll('#projects .project-card');
-            const projectOffset = isMobile ? 35 : 75;
-            projectCards.forEach((card, index) => {
+            // Featured Proof of Work Flagships - Alternating Slide-In (Bidirectional)
+            const flagshipCards = document.querySelectorAll('#projects .flagship-card');
+            const projectOffset = isMobile ? 30 : 55;
+            flagshipCards.forEach((card, index) => {
                 const fromLeft = index % 2 === 0;
                 gsap.from(card, {
                     scrollTrigger: {
@@ -266,13 +371,34 @@ document.addEventListener('DOMContentLoaded', () => {
                     x: fromLeft ? -projectOffset : projectOffset,
                     scale: 0.98,
                     opacity: 0,
-                    duration: 0.9,
+                    duration: 0.85,
                     ease: "power3.out",
                     onComplete: () => {
                         gsap.set(card, { clearProps: "all" });
                     }
                 });
             });
+
+            // Secondary Projects Grid - Staggered Subtle Lift (Bidirectional)
+            const secondaryCards = document.querySelectorAll('#projects .secondary-card');
+            if (secondaryCards.length > 0) {
+                gsap.from(secondaryCards, {
+                    scrollTrigger: {
+                        trigger: ".secondary-projects-grid",
+                        start: "top 88%",
+                        end: "bottom 6%",
+                        toggleActions: "play reverse play reverse"
+                    },
+                    y: 20,
+                    opacity: 0,
+                    stagger: 0.08,
+                    duration: 0.65,
+                    ease: "power3.out",
+                    onComplete: () => {
+                        gsap.set(secondaryCards, { clearProps: "all" });
+                    }
+                });
+            }
 
             // Open Source Contributions - Rows Slide-In from Left (Bidirectional)
             const contributionRows = document.querySelectorAll('#contributions .contribution-row');
