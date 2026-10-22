@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Only intercept primary left clicks without modifier keys
             if (e.button === 0 && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey) {
                 e.preventDefault();
-                const targetEmail = 'saurav.mishra.dev@gmail.com';
+                const targetEmail = 'sauravmishra9045@gmail.com';
 
                 const applySuccess = () => {
                     if (revertTimer) clearTimeout(revertTimer);
